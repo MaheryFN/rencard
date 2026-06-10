@@ -1027,7 +1027,15 @@
       }
       function sendFb(e) {
          e.preventDefault();
-         window.open('https://www.facebook.com/messages/new?text=' + encodeURIComponent(getPlan()), '_blank');
+         if (navigator.share) {
+            navigator.share({
+               title: 'Notre rendez-vous',
+               text: getPlan()
+            });
+         } else {
+            // Fallback si le navigateur ne supporte pas
+            window.open('https://www.messenger.com/t/?link=' + encodeURIComponent(getPlan()), '_blank');
+         }
       }
       function toast(msg) {
          const t = document.getElementById('toast');
