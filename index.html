@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+   <title>Une question pour toi...</title>
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet">
+   <style>
+      * {
+         box-sizing: border-box;
+         margin: 0;
+         padding: 0;
+      }
+
+      :root {
+         --rose: #D4537E;
+         --rose-light: #FBEAF0;
+         --rose-mid: #F4C0D1;
+         --rose-dark: #72243E;
+         --ink: #1a1118;
+         --ink2: #5a4a52;
+         --ink3: #9a8a92;
+         --bg: #fdf6f9;
+         --white: #fff;
+         --radius: 16px;
+         --radius-sm: 10px;
+         --mono: 'DM Sans', system-ui, sans-serif;
+         --serif: 'DM Serif Display', Georgia, serif;
+      }
+
+      html,
+      body {
+         min-height: 100%;
+         background: var(--bg);
+      }
+
+      body {
+         font-family: var(--mono);
+         color: var(--ink);
+         padding: 0;
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+      }
+
+      .page {
+         width: 100%;
+         max-width: 480px;
+         min-height: 100svh;
+         display: flex;
+         flex-direction: column;
+         padding: 0 0 48px;
+      }
+
+      .topbar {
+         display: flex;
+         align-items: center;
+         justify-content: space-between;
+         padding: 24px 24px 0;
+      }
+
+      .logo {
+         font-family: var(--serif);
+         font-style: italic;
+         font-size: 15px;
+         color: var(--rose);
+         letter-spacing: .01em;
+      }
+
+      .steps-dots {
+         display: flex;
+         gap: 6px;
+         align-items: center;
+      }
+
+      .sd {
+         width: 6px;
+         height: 6px;
+         border-radius: 50%;
+         background: var(--rose-mid);
+         transition: all .4s;
+      }
+
+      .sd.on {
+         width: 20px;
+         border-radius: 3px;
+         background: var(--rose);
+      }
+
+      .sd.done {
+         background: var(--rose);
+         opacity: .4;
+      }
+
+      .step {
+         display: none;
+         flex-direction: column;
+         flex: 1;
+         padding: 32px 24px 0;
+         animation: fadeUp .45s cubic-bezier(.22, 1, .36, 1) both;
+      }
+
+      .step.active {
+         display: flex;
+      }
+
+      @keyframes fadeUp {
+         from {
+            opacity: 0;
+            transform: translateY(22px);
+         }
+
+         to {
+            opacity: 1;
+            transform: translateY(0);
+         }
+      }
+
+      .step-eyebrow {
+         font-size: 11px;
+         font-weight: 500;
+         letter-spacing: .12em;
+         color: var(--rose);
+         text-transform: uppercase;
+         margin-bottom: 10px;
+      }
+
+      .step-title {
+         font-family: var(--serif);
+         font-size: clamp(26px, 7vw, 34px);
+         line-height: 1.18;
+         color: var(--ink);
+         margin-bottom: 8px;
+      }
+
+      .step-title em {
+         font-style: italic;
+         color: var(--rose);
+      }
+
+      .step-sub {
+         font-size: 14px;
+         color: var(--ink3);
+         line-height: 1.6;
+         margin-bottom: 32px;
+      }
+
+      .illus {
+         width: 100%;
+         max-width: 240px;
+         margin: 0 auto 28px;
+         display: block;
+      }
+
+      .btn-primary {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         gap: 10px;
+         width: 100%;
+         padding: 17px 24px;
+         border-radius: 100px;
+         border: none;
+         background: var(--rose);
+         color: #fff;
+         font-family: var(--mono);
+         font-size: 15px;
+         font-weight: 500;
+         cursor: pointer;
+         transition: transform .15s, opacity .15s;
+         text-decoration: none;
+      }
+
+      .btn-primary:active {
+         transform: scale(.97);
+      }
+
+      .btn-primary svg {
+         flex-shrink: 0;
+      }
+
+      .no-zone {
+         position: relative;
+         width: 100%;
+         height: 120px;
+         margin-top: 14px;
+         border-radius: 16px;
+         overflow: hidden;
+      }
+
+      .btn-ghost {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         padding: 15px 28px;
+         border-radius: 100px;
+         border: 1.5px solid var(--rose-mid);
+         background: var(--white);
+         color: var(--ink3);
+         font-family: var(--mono);
+         font-size: 14px;
+         cursor: pointer;
+         position: absolute;
+         transform: translate(-50%, -50%);
+         left: 50%;
+         top: 50%;
+         transition: left .32s cubic-bezier(.34, 1.4, .64, 1), top .32s cubic-bezier(.34, 1.4, .64, 1);
+         white-space: nowrap;
+         user-select: none;
+         -webkit-user-select: none;
+      }
+
+      .divider {
+         height: 1px;
+         background: var(--rose-light);
+         margin: 28px 0;
+      }
+
+      .field-wrap {
+         margin-bottom: 20px;
+      }
+
+      .field-label {
+         font-size: 11px;
+         font-weight: 500;
+         letter-spacing: .1em;
+         text-transform: uppercase;
+         color: var(--ink3);
+         margin-bottom: 8px;
+         display: flex;
+         align-items: center;
+         gap: 6px;
+      }
+
+      .field-label svg {
+         flex-shrink: 0;
+      }
+
+      input[type=date],
+      input[type=time] {
+         width: 100%;
+         padding: 14px 16px;
+         border-radius: var(--radius-sm);
+         border: 1.5px solid var(--rose-mid);
+         background: var(--white);
+         font-family: var(--mono);
+         font-size: 15px;
+         color: var(--ink);
+         outline: none;
+         transition: border-color .2s;
+         -webkit-appearance: none;
+         appearance: none;
+      }
+
+      input[type=date]:focus,
+      input[type=time]:focus {
+         border-color: var(--rose);
+      }
+
+      input[type=text],
+      textarea {
+         width: 100%;
+         padding: 14px 16px;
+         border-radius: var(--radius-sm);
+         border: 1.5px solid var(--rose-mid);
+         background: var(--white);
+         font-family: var(--mono);
+         font-size: 14px;
+         color: var(--ink);
+         outline: none;
+         transition: border-color .2s;
+         resize: none;
+      }
+
+      input[type=text]:focus,
+      textarea:focus {
+         border-color: var(--rose);
+      }
+
+      .grid2 {
+         display: grid;
+         grid-template-columns: 1fr 1fr;
+         gap: 10px;
+      }
+
+      .option-btn {
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         justify-content: center;
+         gap: 8px;
+         padding: 16px 8px;
+         border-radius: var(--radius-sm);
+         border: 1.5px solid var(--rose-mid);
+         background: var(--white);
+         cursor: pointer;
+         transition: all .2s;
+         font-family: var(--mono);
+         font-size: 13px;
+         color: var(--ink2);
+         text-align: center;
+         line-height: 1.3;
+      }
+
+      .option-btn svg {
+         color: var(--ink3);
+         transition: color .2s;
+      }
+
+      .option-btn:hover {
+         border-color: var(--rose);
+         background: var(--rose-light);
+      }
+
+      .option-btn.sel {
+         border-color: var(--rose);
+         background: var(--rose-light);
+         color: var(--rose-dark);
+         font-weight: 500;
+      }
+
+      .option-btn.sel svg {
+         color: var(--rose);
+      }
+
+      .act-grid {
+         display: grid;
+         grid-template-columns: 1fr 1fr;
+         gap: 8px;
+         margin-bottom: 16px;
+      }
+
+      .act-btn {
+         display: flex;
+         align-items: center;
+         gap: 10px;
+         padding: 12px 14px;
+         border-radius: var(--radius-sm);
+         border: 1.5px solid var(--rose-mid);
+         background: var(--white);
+         cursor: pointer;
+         transition: all .2s;
+         font-family: var(--mono);
+         font-size: 13px;
+         color: var(--ink2);
+         text-align: left;
+      }
+
+      .act-btn svg {
+         flex-shrink: 0;
+         color: var(--ink3);
+         transition: color .2s;
+      }
+
+      .act-btn.sel {
+         border-color: var(--rose);
+         background: var(--rose-light);
+         color: var(--rose-dark);
+         font-weight: 500;
+      }
+
+      .act-btn.sel svg {
+         color: var(--rose);
+      }
+
+      .act-btn .check {
+         width: 16px;
+         height: 16px;
+         border-radius: 50%;
+         border: 1.5px solid var(--rose-mid);
+         margin-left: auto;
+         flex-shrink: 0;
+         transition: all .2s;
+         background: var(--white);
+      }
+
+      .act-btn.sel .check {
+         background: var(--rose);
+         border-color: var(--rose);
+         display: flex;
+         align-items: center;
+         justify-content: center;
+      }
+
+      .recap-block {
+         background: var(--rose-light);
+         border-radius: var(--radius);
+         padding: 20px;
+         margin-bottom: 20px;
+      }
+
+      .recap-row {
+         display: flex;
+         gap: 12px;
+         align-items: flex-start;
+         padding: 12px 0;
+         border-bottom: 1px solid var(--rose-mid);
+      }
+
+      .recap-row:last-child {
+         border-bottom: none;
+         padding-bottom: 0;
+      }
+
+      .recap-icon {
+         width: 36px;
+         height: 36px;
+         background: var(--white);
+         border-radius: 8px;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         flex-shrink: 0;
+      }
+
+      .recap-icon svg {
+         color: var(--rose);
+      }
+
+      .recap-info {
+         flex: 1;
+      }
+
+      .recap-lbl {
+         font-size: 10px;
+         font-weight: 500;
+         letter-spacing: .1em;
+         text-transform: uppercase;
+         color: var(--ink3);
+         margin-bottom: 3px;
+      }
+
+      .recap-val {
+         font-size: 14px;
+         color: var(--ink);
+         line-height: 1.5;
+      }
+
+      .btn-copy {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         gap: 10px;
+         width: 100%;
+         padding: 16px;
+         border-radius: 100px;
+         border: none;
+         background: var(--ink);
+         color: #fff;
+         font-family: var(--mono);
+         font-size: 14px;
+         font-weight: 500;
+         cursor: pointer;
+         margin-bottom: 10px;
+         transition: opacity .15s;
+      }
+
+      .btn-copy:active {
+         opacity: .8;
+      }
+
+      .btn-fb {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         gap: 10px;
+         width: 100%;
+         padding: 16px;
+         border-radius: 100px;
+         border: 1.5px solid #1877f2;
+         background: transparent;
+         color: #1877f2;
+         font-family: var(--mono);
+         font-size: 14px;
+         font-weight: 500;
+         cursor: pointer;
+         text-decoration: none;
+         transition: all .2s;
+      }
+
+      .btn-fb:hover {
+         background: #1877f2;
+         color: #fff;
+      }
+
+      .toast-wrap {
+         position: fixed;
+         bottom: 24px;
+         left: 0;
+         right: 0;
+         display: flex;
+         justify-content: center;
+         pointer-events: none;
+         z-index: 999;
+      }
+
+      .toast {
+         background: var(--ink);
+         color: #fff;
+         padding: 12px 22px;
+         border-radius: 100px;
+         font-size: 13px;
+         opacity: 0;
+         transform: translateY(12px);
+         transition: all .35s cubic-bezier(.34, 1.56, .64, 1);
+      }
+
+      .toast.show {
+         opacity: 1;
+         transform: translateY(0);
+      }
+
+      .confetti-wrap {
+         position: fixed;
+         inset: 0;
+         pointer-events: none;
+         z-index: 9999;
+         overflow: hidden;
+      }
+
+      .cp {
+         position: absolute;
+         top: -16px;
+         border-radius: 3px;
+         animation: fall linear forwards;
+      }
+
+      @keyframes fall {
+         to {
+            transform: translateY(105vh) rotate(600deg);
+            opacity: 0;
+         }
+      }
+
+      @media(max-width:380px) {
+         .step-title {
+            font-size: 24px;
+         }
+
+         .step {
+            padding: 24px 18px 0;
+         }
+
+         .topbar {
+            padding: 18px 18px 0;
+         }
+      }
+   </style>
+</head>
+
+<body>
+
+   <div class="confetti-wrap" id="cfWrap"></div>
+   <div class="toast-wrap">
+      <div class="toast" id="toast"></div>
+   </div>
+
+   <div class="page">
+      <div class="topbar">
+         <span class="logo">pour toi</span>
+         <div class="steps-dots">
+            <div class="sd on" id="sd1"></div>
+            <div class="sd" id="sd2"></div>
+            <div class="sd" id="sd3"></div>
+            <div class="sd" id="sd4"></div>
+            <div class="sd" id="sd5"></div>
+         </div>
+      </div>
+
+      <!-- ───── STEP 1 ───── -->
+      <div class="step active" id="step1">
+         <div class="step-eyebrow">une petite question</div>
+         <div class="step-title">Est-ce que tu veux<br>passer du temps<br><em>avec moi ?</em></div>
+         <div class="step-sub">J'ai une petite idée en tête et j'aimerais vraiment que tu sois là.</div>
+
+         <svg class="illus" viewBox="0 0 220 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="110" cy="80" r="68" fill="#FBEAF0" />
+            <path
+               d="M110 108 C110 108 76 88 76 66 C76 54 86 46 98 50 C104 52 108 56 110 60 C112 56 116 52 122 50 C134 46 144 54 144 66 C144 88 110 108 110 108Z"
+               fill="#D4537E" opacity=".85" />
+            <circle cx="88" cy="62" r="4" fill="#fff" opacity=".5" />
+            <path d="M80 112 Q96 100 110 108 Q124 100 140 112" stroke="#D4537E" stroke-width="1.5" fill="none"
+               opacity=".3" />
+            <circle cx="60" cy="44" r="6" fill="#D4537E" opacity=".2" />
+            <circle cx="162" cy="38" r="4" fill="#D4537E" opacity=".25" />
+            <circle cx="155" cy="120" r="7" fill="#D4537E" opacity=".15" />
+            <circle cx="52" cy="110" r="5" fill="#D4537E" opacity=".2" />
+         </svg>
+
+         <button class="btn-primary" onclick="accept()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+               <path
+                  d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"
+                  fill="currentColor" />
+            </svg>
+            Oui, avec plaisir !
+         </button>
+
+         <div class="no-zone" id="noZone">
+            <button class="btn-ghost" id="noBtn" onmouseenter="flee()" onclick="nope()">
+               Non merci...
+            </button>
+         </div>
+      </div>
+
+      <!-- ───── STEP 2 ───── -->
+      <div class="step" id="step2">
+         <div class="step-eyebrow">étape 1 / 4</div>
+         <div class="step-title">Quand es-tu<br><em>disponible ?</em></div>
+         <div class="step-sub">Choisis une date et une heure entre 7h et 19h.</div>
+
+         <div class="field-wrap">
+            <div class="field-label">
+               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+               </svg>
+               La date
+            </div>
+            <input type="date" id="dateIn" oninput="chk2()">
+         </div>
+         <div class="field-wrap">
+            <div class="field-label">
+               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+               </svg>
+               L'heure
+            </div>
+            <input type="time" id="timeIn" min="07:00" max="19:00" oninput="chk2()">
+         </div>
+
+         <div style="margin-top:auto;padding-top:24px;">
+            <button class="btn-primary" id="nxt2" onclick="go(3)" disabled style="opacity:.35">
+               Suivant
+               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+               </svg>
+            </button>
+         </div>
+      </div>
+
+      <!-- ───── STEP 3 ───── -->
+      <div class="step" id="step3">
+         <div class="step-eyebrow">étape 2 / 4</div>
+         <div class="step-title">On se<br><em>retrouve où ?</em></div>
+         <div class="step-sub">Le point de départ de notre journée.</div>
+
+         <div class="grid2" id="lieuGrid">
+            <button class="option-btn" onclick="pickLieu(this,'Chez moi')">
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                  <polyline points="9 22 9 12 15 12 15 22" />
+               </svg>
+               Chez moi
+            </button>
+            <button class="option-btn" onclick="pickLieu(this,'Chez toi')">
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                  <polyline points="9 22 9 12 15 12 15 22" />
+                  <circle cx="19" cy="19" r="3" fill="currentColor" opacity=".2" stroke="none" />
+                  <circle cx="19" cy="19" r="3" />
+               </svg>
+               Chez toi
+            </button>
+            <button class="option-btn" onclick="pickLieu(this,'À Analakely')">
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="3" y1="22" x2="21" y2="22" />
+                  <rect x="2" y="9" width="4" height="13" />
+                  <rect x="10" y="5" width="4" height="17" />
+                  <rect x="18" y="13" width="4" height="9" />
+                  <line x1="6" y1="9" x2="10" y2="5" />
+               </svg>
+               Analakely
+            </button>
+            <button class="option-btn" onclick="pickLieu(this,'Rocade Andranobevava')">
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 14c1.5-1 2.5-2.5 2.5-4.5A5.5 5.5 0 0 0 12 4a5.5 5.5 0 0 0-5.5 5.5c0 2 1 3.5 2.5 4.5" />
+                  <line x1="12" y1="14" x2="12" y2="22" />
+                  <line x1="8" y1="22" x2="16" y2="22" />
+               </svg>
+               Rocade Andranobevava
+            </button>
+            <button class="option-btn" onclick="pickLieu(this,'__autre__')">
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="16" />
+                  <line x1="8" y1="12" x2="16" y2="12" />
+               </svg>
+               Autre...
+            </button>
+         </div>
+
+         <div id="lieuCustomWrap" style="display:none;margin-top:12px;">
+            <input type="text" id="lieuCustom" placeholder="Précise le lieu de rencontre..." oninput="chk3()">
+         </div>
+
+         <div style="margin-top:auto;padding-top:24px;">
+            <button class="btn-primary" id="nxt3" onclick="go(4)" disabled style="opacity:.35">
+               Suivant
+               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+               </svg>
+            </button>
+         </div>
+      </div>
+
+      <!-- ───── STEP 4 ───── -->
+      <div class="step" id="step4">
+         <div class="step-eyebrow">étape 3 / 4</div>
+         <div class="step-title">T'as envie<br><em>de quoi ?</em></div>
+         <div class="step-sub">Coche tout ce qui te tente — on fait tout si tu veux.</div>
+
+         <div class="act-grid">
+            <button class="act-btn" onclick="togAct(this,'Voir un film')">
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round">
+                  <rect x="2" y="2" width="20" height="20" rx="2.18" />
+                  <line x1="7" y1="2" x2="7" y2="22" />
+                  <line x1="17" y1="2" x2="17" y2="22" />
+                  <line x1="2" y1="12" x2="22" y2="12" />
+                  <line x1="2" y1="7" x2="7" y2="7" />
+                  <line x1="2" y1="17" x2="7" y2="17" />
+                  <line x1="17" y1="17" x2="22" y2="17" />
+                  <line x1="17" y1="7" x2="22" y2="7" />
+               </svg>
+               Voir un film
+               <span class="check"></span>
+            </button>
+            <button class="act-btn" onclick="togAct(this,'Boire du thé')">
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 8h1a4 4 0 0 1 0 8h-1" />
+                  <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z" />
+               </svg>
+               Boire du thé
+               <span class="check"></span>
+            </button>
+            <button class="act-btn" onclick="togAct(this,'Live music')">
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 18V5l12-2v13" />
+                  <circle cx="6" cy="18" r="3" />
+                  <circle cx="18" cy="16" r="3" />
+               </svg>
+               Live music
+               <span class="check"></span>
+            </button>
+            <button class="act-btn" onclick="togAct(this,'Manger ensemble')">
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
+                  <line x1="7" y1="2" x2="7" y2="11" />
+                  <path
+                     d="M21 15V2a5 5 0 0 0-5 5v6h3.5c.83 0 1.5.67 1.5 1.5v1c0 .83-.67 1.5-1.5 1.5H19l-1 7h-2l-1-7h-1.5c-.83 0-1.5-.67-1.5-1.5v-1c0-.83.67-1.5 1.5-1.5H16" />
+               </svg>
+               Manger
+               <span class="check"></span>
+            </button>
+            <button class="act-btn" onclick="togAct(this,'Se balader')">
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="5" r="2" />
+                  <path d="M10.5 22v-6l-2-4.5 3.5-2 3.5 6h2" />
+                  <path d="M8 10l-2 2h3" />
+               </svg>
+               Se balader
+               <span class="check"></span>
+            </button>
+            <button class="act-btn" onclick="togAct(this,'Jeux de société')">
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="7" width="20" height="14" rx="2" />
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+               </svg>
+               Jeux de société
+               <span class="check"></span>
+            </button>
+            <button class="act-btn" onclick="togAct(this,'Regarder des séries')">
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="3" width="20" height="14" rx="2" />
+                  <line x1="8" y1="21" x2="16" y2="21" />
+                  <line x1="12" y1="17" x2="12" y2="21" />
+               </svg>
+               Séries
+               <span class="check"></span>
+            </button>
+            <button class="act-btn" onclick="togAct(this,'Shopping')">
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <path d="M16 10a4 4 0 0 1-8 0" />
+               </svg>
+               Shopping
+               <span class="check"></span>
+            </button>
+            <button class="act-btn" onclick="togAct(this,'Cuisiner ensemble')">
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path
+                     d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6V13.87z" />
+                  <line x1="6" y1="17" x2="18" y2="17" />
+               </svg>
+               Cuisiner
+               <span class="check"></span>
+            </button>
+            <button class="act-btn" onclick="togAct(this,'Aller au ciné')">
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 7l-7 5 7 5V7z" />
+                  <rect x="1" y="5" width="15" height="14" rx="2" />
+               </svg>
+               Aller au ciné
+               <span class="check"></span>
+            </button>
+         </div>
+
+         <div class="field-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round">
+               <line x1="12" y1="5" x2="12" y2="19" />
+               <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Autre envie ? (optionnel)
+         </div>
+         <textarea id="actAutre" rows="2" placeholder="Dis-moi tout..."></textarea>
+
+         <div style="margin-top:20px;padding-bottom:8px;">
+            <button class="btn-primary" id="nxt4" onclick="buildRecap()" disabled style="opacity:.35">
+               Voir notre plan
+               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path
+                     d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+               </svg>
+            </button>
+         </div>
+      </div>
+
+      <!-- ───── STEP 5 ───── -->
+      <div class="step" id="step5">
+         <div class="step-eyebrow">notre plan</div>
+         <div class="step-title">C'est<br><em>parfait !</em></div>
+         <div class="step-sub">Voilà ce qu'on a prévu — j'ai vraiment hâte.</div>
+
+         <div class="recap-block">
+            <div class="recap-row">
+               <div class="recap-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                     stroke-linecap="round" stroke-linejoin="round">
+                     <rect x="3" y="4" width="18" height="18" rx="2" />
+                     <line x1="16" y1="2" x2="16" y2="6" />
+                     <line x1="8" y1="2" x2="8" y2="6" />
+                     <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
+               </div>
+               <div class="recap-info">
+                  <div class="recap-lbl">Date & Heure</div>
+                  <div class="recap-val" id="rDate">—</div>
+               </div>
+            </div>
+            <div class="recap-row">
+               <div class="recap-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                     stroke-linecap="round" stroke-linejoin="round">
+                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                     <circle cx="12" cy="10" r="3" />
+                  </svg>
+               </div>
+               <div class="recap-info">
+                  <div class="recap-lbl">Lieu de rencontre</div>
+                  <div class="recap-val" id="rLieu">—</div>
+               </div>
+            </div>
+            <div class="recap-row">
+               <div class="recap-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                     stroke-linecap="round" stroke-linejoin="round">
+                     <path
+                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                  </svg>
+               </div>
+               <div class="recap-info">
+                  <div class="recap-lbl">Au programme</div>
+                  <div class="recap-val" id="rActs">—</div>
+               </div>
+            </div>
+         </div>
+
+         <button class="btn-copy" onclick="copyPlan()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+               <rect x="9" y="9" width="13" height="13" rx="2" />
+               <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+            Copier le plan
+         </button>
+         <a class="btn-fb" id="fbBtn" href="#" onclick="sendFb(event)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+               <path
+                  d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.514c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z" />
+            </svg>
+            Envoyer sur Messenger
+         </a>
+      </div>
+   </div>
+
+   <script>
+      const noLines = [
+         "Mauvaise réponse, réessaie...",
+         "Non non non. Encore.",
+         "Ce bouton n'est pas pour toi.",
+         "Sois sérieuse là.",
+         "Tu peux pas dire non.",
+         "Hm. Vraiment ??",
+         "Dernier essai avant la tête.",
+         "La bonne réponse c'est OUI.",
+         "Obstinée, toi.",
+         "Ok mais... vraiment ?",
+      ];
+      let noCount = 0, selLieu = '', selActs = [];
+
+      function flee() {
+         const btn = document.getElementById('noBtn');
+         const zone = document.getElementById('noZone');
+         const zw = zone.offsetWidth, zh = zone.offsetHeight;
+         const bw = btn.offsetWidth, bh = btn.offsetHeight;
+         const pad = 8;
+         const maxL = zw - bw / 2 - pad, minL = bw / 2 + pad;
+         const maxT = zh - bh / 2 - pad, minT = bh / 2 + pad;
+         btn.style.left = (minL + Math.random() * (maxL - minL)) + 'px';
+         btn.style.top = (minT + Math.random() * (maxT - minT)) + 'px';
+      }
+      function nope() {
+         const btn = document.getElementById('noBtn');
+         btn.textContent = noLines[Math.min(noCount, noLines.length - 1)];
+         noCount++;
+         flee();
+      }
+      document.getElementById('noBtn').addEventListener('touchstart', function (e) {
+         e.preventDefault();
+         nope();
+      }, { passive: false });
+      function accept() {
+         burst();
+         setTimeout(() => go(2), 500);
+      }
+      function go(n) {
+         document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+         document.getElementById('step' + n).classList.add('active');
+         for (let i = 1; i <= 5; i++) {
+            const d = document.getElementById('sd' + i);
+            d.className = 'sd' + (i < n ? ' done' : i === n ? ' on' : '');
+         }
+         window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      function chk2() {
+         const d = document.getElementById('dateIn').value;
+         const t = document.getElementById('timeIn').value;
+         const ok = d && t && parseInt(t) >= 7 && parseInt(t) <= 19;
+         const b = document.getElementById('nxt2');
+         b.disabled = !ok; b.style.opacity = ok ? '1' : '.35';
+      }
+      function pickLieu(btn, v) {
+         document.querySelectorAll('#lieuGrid .option-btn').forEach(b => b.classList.remove('sel'));
+         btn.classList.add('sel');
+         selLieu = v === '__autre__' ? '' : v;
+         document.getElementById('lieuCustomWrap').style.display = v === '__autre__' ? 'block' : 'none';
+         chk3();
+      }
+      function chk3() {
+         if (document.querySelector('#lieuGrid .option-btn.sel')?.textContent.trim().startsWith('Autre'))
+            selLieu = document.getElementById('lieuCustom').value.trim();
+         const ok = !!selLieu;
+         const b = document.getElementById('nxt3');
+         b.disabled = !ok; b.style.opacity = ok ? '1' : '.35';
+      }
+      function togAct(btn, name) {
+         btn.classList.toggle('sel');
+         const chk = btn.querySelector('.check');
+         if (btn.classList.contains('sel')) {
+            selActs.push(name);
+            chk.innerHTML = '<svg width="10" height="10" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+         } else {
+            selActs = selActs.filter(a => a !== name);
+            chk.innerHTML = '';
+         }
+         const b = document.getElementById('nxt4');
+         b.disabled = selActs.length === 0; b.style.opacity = selActs.length ? '1' : '.35';
+      }
+      function buildRecap() {
+         const d = document.getElementById('dateIn').value;
+         const t = document.getElementById('timeIn').value;
+         const autre = document.getElementById('actAutre').value.trim();
+         const df = new Date(d + 'T' + t).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+         document.getElementById('rDate').textContent = df + ' à ' + t;
+         document.getElementById('rLieu').textContent = selLieu;
+         let acts = [...selActs];
+         if (autre) acts.push(autre);
+         document.getElementById('rActs').textContent = acts.join(' · ') || '—';
+         go(5);
+      }
+      function getPlan() {
+         return `Notre rendez-vous\n\nDate : ${document.getElementById('rDate').textContent}\nLieu de rencontre : ${document.getElementById('rLieu').textContent}\nAu programme : ${document.getElementById('rActs').textContent}\n\nJ'ai vraiment hâte de te voir !`;
+      }
+      function copyPlan() {
+         navigator.clipboard.writeText(getPlan()).then(() => toast('Copié dans le presse-papier !')).catch(() => toast('Utilise le bouton Messenger'));
+      }
+      function sendFb(e) {
+         e.preventDefault();
+         window.open('https://www.facebook.com/messages/new?text=' + encodeURIComponent(getPlan()), '_blank');
+      }
+      function toast(msg) {
+         const t = document.getElementById('toast');
+         t.textContent = msg; t.classList.add('show');
+         setTimeout(() => t.classList.remove('show'), 2800);
+      }
+      function burst() {
+         const c = document.getElementById('cfWrap');
+         const cols = ['#D4537E', '#F4C0D1', '#72243E', '#FBEAF0', '#993556', '#fff'];
+         for (let i = 0; i < 55; i++) {
+            const p = document.createElement('div');
+            p.className = 'cp';
+            p.style.cssText = `left:${Math.random() * 100}vw;width:${6 + Math.random() * 8}px;height:${6 + Math.random() * 8}px;background:${cols[Math.floor(Math.random() * cols.length)]};border-radius:${Math.random() > .5 ? '50%' : '2px'};animation-duration:${1.4 + Math.random() * 1.8}s;animation-delay:${Math.random() * .6}s;`;
+            c.appendChild(p);
+            setTimeout(() => p.remove(), 3500);
+         }
+      }
+      document.getElementById('dateIn').min = new Date().toISOString().split('T')[0];
+   </script>
+</body>
+
+</html>
